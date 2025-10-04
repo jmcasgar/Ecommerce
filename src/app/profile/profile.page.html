@@ -1,0 +1,124 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Mi Perfil</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="logout()" color="danger" fill="clear">
+        <ion-icon name="log-out-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Mi Perfil</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <!-- User Info -->
+  <ion-card *ngIf="currentUser">
+    <ion-card-content>
+      <div class="user-info">
+        <ion-avatar class="user-avatar">
+          <img [src]="'https://via.placeholder.com/100x100/007ACC/FFFFFF?text=' + currentUser.firstName.charAt(0)" [alt]="currentUser.firstName">
+        </ion-avatar>
+        <div class="user-details">
+          <h2>{{ currentUser.firstName }} {{ currentUser.lastName }}</h2>
+          <p>{{ currentUser.email }}</p>
+          <p *ngIf="currentUser.phone">{{ currentUser.phone }}</p>
+        </div>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Menu Options -->
+  <ion-list>
+    <ion-item button (click)="goToOrders()">
+      <ion-icon name="receipt-outline" slot="start" color="primary"></ion-icon>
+      <ion-label>
+        <h3>Mis Pedidos</h3>
+        <p>Ver historial de compras</p>
+      </ion-label>
+      <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
+    </ion-item>
+
+    <ion-item button (click)="goToCart()">
+      <ion-icon name="cart-outline" slot="start" color="primary"></ion-icon>
+      <ion-label>
+        <h3>Carrito de Compras</h3>
+        <p>{{ cartItemCount }} productos</p>
+      </ion-label>
+      <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
+    </ion-item>
+
+    <ion-item button (click)="goToProducts()">
+      <ion-icon name="storefront-outline" slot="start" color="primary"></ion-icon>
+      <ion-label>
+        <h3>Productos</h3>
+        <p>Explorar catálogo</p>
+      </ion-label>
+      <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
+    </ion-item>
+
+    <ion-item *ngIf="isAdmin" button (click)="goToAdmin()">
+      <ion-icon name="settings-outline" slot="start" color="warning"></ion-icon>
+      <ion-label>
+        <h3>Panel de Administración</h3>
+        <p>Gestionar pedidos y productos</p>
+      </ion-label>
+      <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
+    </ion-item>
+
+    <ion-item button (click)="showAbout()">
+      <ion-icon name="information-circle-outline" slot="start" color="primary"></ion-icon>
+      <ion-label>
+        <h3>Acerca de</h3>
+        <p>Información de la aplicación</p>
+      </ion-label>
+      <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
+    </ion-item>
+
+    <!-- Logout Option -->
+    <ion-item button (click)="logout()" class="logout-item">
+      <ion-icon name="log-out-outline" slot="start"></ion-icon>
+      <ion-label>
+        <h3>Cerrar Sesión</h3>
+        <p>Salir de la aplicación</p>
+      </ion-label>
+      <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
+    </ion-item>
+  </ion-list>
+
+  <!-- Orders Section -->
+  <ion-card *ngIf="recentOrders.length > 0">
+    <ion-card-header>
+      <ion-card-title>Pedidos Recientes</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item *ngFor="let order of recentOrders" button (click)="viewOrder(order)">
+          <ion-label>
+            <h3>Pedido #{{ order.id }}</h3>
+            <p>{{ order.items.length }} productos - ${{ order.totalAmount | number:'1.2-2' }}</p>
+            <p class="order-status">{{ getStatusText(order.status) }}</p>
+          </ion-label>
+          <ion-badge [color]="getStatusColor(order.status)" slot="end">
+            {{ getStatusText(order.status) }}
+          </ion-badge>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Empty Orders State -->
+  <div *ngIf="recentOrders.length === 0" class="empty-orders">
+    <ion-icon name="receipt-outline" size="large" color="medium"></ion-icon>
+    <h3>No tienes pedidos aún</h3>
+    <p>Comienza a comprar para ver tus pedidos aquí</p>
+    <ion-button (click)="goToProducts()" fill="outline">
+      <ion-icon name="storefront" slot="start"></ion-icon>
+      Ver Productos
+    </ion-button>
+  </div>
+</ion-content>

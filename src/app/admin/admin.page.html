@@ -1,0 +1,156 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Panel de Administración</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="logout()">
+        <ion-icon name="log-out-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="admin-container">
+    <!-- Estadísticas Generales -->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Estadísticas Generales</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="stats-grid">
+          <div class="stat-item">
+            <ion-icon name="receipt-outline" color="primary"></ion-icon>
+            <h3>{{totalOrders}}</h3>
+            <p>Total Pedidos</p>
+          </div>
+          <div class="stat-item">
+            <ion-icon name="checkmark-circle-outline" color="success"></ion-icon>
+            <h3>{{completedOrders}}</h3>
+            <p>Completados</p>
+          </div>
+          <div class="stat-item">
+            <ion-icon name="time-outline" color="warning"></ion-icon>
+            <h3>{{pendingOrders}}</h3>
+            <p>Pendientes</p>
+          </div>
+          <div class="stat-item">
+            <ion-icon name="cash-outline" color="tertiary"></ion-icon>
+            <h3>${{totalRevenue | number:'1.2-2'}}</h3>
+            <p>Ingresos Totales</p>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Filtros -->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Filtrar Pedidos</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-segment [(ngModel)]="selectedStatus" (ionChange)="filterOrders()">
+          <ion-segment-button value="all">
+            <ion-label>Todos</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="pending">
+            <ion-label>Pendientes</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="processing">
+            <ion-label>Procesando</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="shipped">
+            <ion-label>Enviados</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="delivered">
+            <ion-label>Entregados</ion-label>
+          </ion-segment-button>
+        </ion-segment>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Lista de Pedidos -->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Gestión de Pedidos</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div *ngIf="filteredOrders.length === 0" class="empty-state">
+          <ion-icon name="receipt-outline" size="large"></ion-icon>
+          <p>No hay pedidos con el filtro seleccionado</p>
+        </div>
+
+        <ion-list *ngIf="filteredOrders.length > 0">
+          <ion-item-sliding *ngFor="let order of filteredOrders">
+            <ion-item>
+              <ion-thumbnail slot="start">
+                <img [src]="getOrderImage(order)" [alt]="order.items[0]?.product?.name">
+              </ion-thumbnail>
+              <ion-label>
+                <h2>Pedido #{{order.id}}</h2>
+                <h3>{{order.items.length}} producto(s)</h3>
+                <p>{{order.shippingAddress}}</p>
+                <p><strong>Total: ${{order.totalAmount | number:'1.2-2'}}</strong></p>
+                <p>{{formatDate(order.createdAt)}}</p>
+              </ion-label>
+              <ion-badge [color]="getStatusColor(order.status)" slot="end">
+                {{getStatusText(order.status)}}
+              </ion-badge>
+            </ion-item>
+
+            <ion-item-options side="end">
+              <ion-item-option 
+                *ngIf="order.status === 'pending'" 
+                color="primary" 
+                (click)="updateOrderStatus(order, 'processing')">
+                <ion-icon name="play-outline"></ion-icon>
+                Procesar
+              </ion-item-option>
+              <ion-item-option 
+                *ngIf="order.status === 'processing'" 
+                color="warning" 
+                (click)="updateOrderStatus(order, 'shipped')">
+                <ion-icon name="car-outline"></ion-icon>
+                Enviar
+              </ion-item-option>
+              <ion-item-option 
+                *ngIf="order.status === 'shipped'" 
+                color="success" 
+                (click)="updateOrderStatus(order, 'delivered')">
+                <ion-icon name="checkmark-outline"></ion-icon>
+                Entregar
+              </ion-item-option>
+              <ion-item-option 
+                *ngIf="order.status !== 'delivered' && order.status !== 'cancelled'" 
+                color="danger" 
+                (click)="updateOrderStatus(order, 'cancelled')">
+                <ion-icon name="close-outline"></ion-icon>
+                Cancelar
+              </ion-item-option>
+            </ion-item-options>
+          </ion-item-sliding>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Acciones Rápidas -->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Acciones Rápidas</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-button expand="block" fill="outline" (click)="goToProducts()">
+          <ion-icon name="storefront-outline" slot="start"></ion-icon>
+          Gestionar Productos
+        </ion-button>
+        <ion-button expand="block" fill="outline" (click)="exportOrders()">
+          <ion-icon name="download-outline" slot="start"></ion-icon>
+          Exportar Pedidos
+        </ion-button>
+        <ion-button expand="block" fill="outline" (click)="refreshData()">
+          <ion-icon name="refresh-outline" slot="start"></ion-icon>
+          Actualizar Datos
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>

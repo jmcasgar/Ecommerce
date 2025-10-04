@@ -1,0 +1,90 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      Registro
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <div class="register-container">
+    <div class="logo-section">
+      <ion-icon name="person-add" size="large" color="primary"></ion-icon>
+      <h1>Crear Cuenta</h1>
+      <p>Únete a nuestra comunidad</p>
+    </div>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
+      <ion-item>
+        <ion-label position="stacked">Nombre</ion-label>
+        <ion-input 
+          type="text" 
+          formControlName="firstName"
+          placeholder="Tu nombre">
+        </ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Apellido</ion-label>
+        <ion-input 
+          type="text" 
+          formControlName="lastName"
+          placeholder="Tu apellido">
+        </ion-input>
+      </ion-item>
+      
+      <ion-item>
+        <ion-label position="stacked">Email</ion-label>
+        <ion-input 
+          type="email" 
+          formControlName="email"
+          placeholder="tu@email.com">
+        </ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Teléfono (Opcional)</ion-label>
+        <ion-input 
+          type="tel" 
+          formControlName="phone"
+          placeholder="+1234567890">
+        </ion-input>
+      </ion-item>
+      
+      <ion-item>
+        <ion-label position="stacked">Contraseña</ion-label>
+        <ion-input 
+          type="password" 
+          formControlName="password"
+          placeholder="Mínimo 6 caracteres">
+        </ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Confirmar Contraseña</ion-label>
+        <ion-input 
+          type="password" 
+          formControlName="confirmPassword"
+          placeholder="Repite tu contraseña">
+        </ion-input>
+      </ion-item>
+
+      <ion-button 
+        expand="block" 
+        type="submit" 
+        [disabled]="registerForm.invalid || isLoading"
+        class="ion-margin-top">
+        <ion-spinner *ngIf="isLoading" name="crescent"></ion-spinner>
+        <span *ngIf="!isLoading">Crear Cuenta</span>
+      </ion-button>
+    </form>
+
+    <div class="login-link">
+      <p>¿Ya tienes cuenta? 
+        <ion-button fill="clear" (click)="goToLogin()">
+          Inicia sesión aquí
+        </ion-button>
+      </p>
+    </div>
+  </div>
+</ion-content>

@@ -1,0 +1,54 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      Iniciar Sesión
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <div class="login-container">
+    <div class="logo-section">
+      <ion-icon name="storefront" size="large" color="primary"></ion-icon>
+      <h1>Ecommerce App</h1>
+      <p>Bienvenido de vuelta</p>
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+      <ion-item>
+        <ion-label position="stacked">Email</ion-label>
+        <ion-input 
+          type="email" 
+          formControlName="email"
+          placeholder="tu@email.com">
+        </ion-input>
+      </ion-item>
+      
+      <ion-item>
+        <ion-label position="stacked">Contraseña</ion-label>
+        <ion-input 
+          type="password" 
+          formControlName="password"
+          placeholder="Tu contraseña">
+        </ion-input>
+      </ion-item>
+
+      <ion-button 
+        expand="block" 
+        type="submit" 
+        [disabled]="loginForm.invalid || isLoading"
+        class="ion-margin-top">
+        <ion-spinner *ngIf="isLoading" name="crescent"></ion-spinner>
+        <span *ngIf="!isLoading">Iniciar Sesión</span>
+      </ion-button>
+    </form>
+
+    <div class="register-link">
+      <p>¿No tienes cuenta? 
+        <ion-button fill="clear" (click)="goToRegister()">
+          Regístrate aquí
+        </ion-button>
+      </p>
+    </div>
+  </div>
+</ion-content>

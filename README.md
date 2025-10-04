@@ -100,4 +100,4 @@ Esta es una aplicación móvil híbrida de ecommerce desarrollada con Ionic y An
 
 Plataformas: Android 34 y iOS 17
 Herramientas: Ionic CLI, Capacitor, Angular CLI
->>>>>>> ba12ab068242909def86c8c8563ccb06adaf3259
+
